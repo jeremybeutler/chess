@@ -72,6 +72,54 @@ public class ChessPiece {
         return validMoves;
     }
 
+    public List<ChessMove> getPawnMoves(List<ChessMove> validMoves, ChessBoard board, ChessPosition position, ChessPiece piece) {
+        ChessGame.TeamColor myPieceColor = piece.getTeamColor();
+        int dy = (myPieceColor == ChessGame.TeamColor.WHITE) ? 1 : -1;
+        int startRow  = (myPieceColor == ChessGame.TeamColor.WHITE) ? 2 : 7;
+        int[] xOptions = {-1, 0, 1};
+
+        for (int dx : xOptions) {
+            int x = position.getColumn() + dx;
+            int y = position.getRow() + dy;
+            boolean inBounds = (x > 0 && y > 0 && x < 9 && y < 9);
+            boolean promotePawn = (
+                    (myPieceColor == ChessGame.TeamColor.WHITE && y == 8) ||
+                            (myPieceColor == ChessGame.TeamColor.BLACK && y == 1)
+            );
+            if (inBounds) {
+                ChessPosition nextPos = new ChessPosition(y, x);
+                ChessPiece pieceAtPos = board.getPiece(nextPos);
+                if (dx == 0) {
+                    if (pieceAtPos == null) {
+                        if (promotePawn)  {
+                            validMoves.addAll(getPromotionMoves(position, nextPos));
+                        } else {
+                            validMoves.add(new ChessMove(position, nextPos, null));
+                            // Include moving 2 squares on first move
+                            if (position.getRow() == startRow) {
+                                y = y + dy;
+                                nextPos = new ChessPosition(y, x);
+                                pieceAtPos = board.getPiece(nextPos);
+                                if (pieceAtPos == null) {
+                                    validMoves.add(new ChessMove(position, nextPos, null));
+                                }
+                            }
+                        }
+                    }
+                } else {
+                    if (pieceAtPos != null && pieceAtPos.getTeamColor() != myPieceColor) {
+                        if (promotePawn)  {
+                            validMoves.addAll(getPromotionMoves(position, nextPos));
+                        } else {
+                            validMoves.add(new ChessMove(position, nextPos, null));
+                        }
+                    }
+                }
+            }
+        }
+        return validMoves;
+    }
+
     public List<ChessMove> loopGetMoves(List<ChessMove> validMoves, int[][] directionsArr, ChessBoard board, ChessPosition position, ChessPiece piece) {
         for (int[] dir : directionsArr) {
             int dx = dir[0], dy = dir[1];
@@ -140,50 +188,7 @@ public class ChessPiece {
         } else if (myPiece.getPieceType() == PieceType.KNIGHT) {
             validMoves = getMoves(validMoves, knightDirections, board, myPosition, myPiece);
         } else if (myPiece.getPieceType() == PieceType.PAWN) {
-            ChessGame.TeamColor myPieceColor = myPiece.getTeamColor();
-            int dy = (myPieceColor == ChessGame.TeamColor.WHITE) ? 1 : -1;
-            int startRow  = (myPieceColor == ChessGame.TeamColor.WHITE) ? 2 : 7;
-            int[] xOptions = {-1, 0, 1};
-
-            for (int dx : xOptions) {
-                int x = myPosition.getColumn() + dx;
-                int y = myPosition.getRow() + dy;
-                boolean inBounds = (x > 0 && y > 0 && x < 9 && y < 9);
-                boolean promotePawn = (
-                    (myPieceColor == ChessGame.TeamColor.WHITE && y == 8) ||
-                    (myPieceColor == ChessGame.TeamColor.BLACK && y == 1)
-                );
-                if (inBounds) {
-                    ChessPosition nextPos = new ChessPosition(y, x);
-                    ChessPiece pieceAtPos = board.getPiece(nextPos);
-                    if (dx == 0) {
-                        if (pieceAtPos == null) {
-                            if (promotePawn)  {
-                                validMoves.addAll(getPromotionMoves(myPosition, nextPos));
-                            } else {
-                                validMoves.add(new ChessMove(myPosition, nextPos, null));
-                                // Include moving 2 squares on first move
-                                if (myPosition.getRow() == startRow) {
-                                    y = y + dy;
-                                    nextPos = new ChessPosition(y, x);
-                                    pieceAtPos = board.getPiece(nextPos);
-                                    if (pieceAtPos == null) {
-                                        validMoves.add(new ChessMove(myPosition, nextPos, null));
-                                    }
-                                }
-                            }
-                        }
-                    } else {
-                        if (pieceAtPos != null && pieceAtPos.getTeamColor() != myPieceColor) {
-                            if (promotePawn)  {
-                                validMoves.addAll(getPromotionMoves(myPosition, nextPos));
-                            } else {
-                                validMoves.add(new ChessMove(myPosition, nextPos, null));
-                            }
-                        }
-                    }
-                }
-            }
+            validMoves = getPawnMoves(validMoves, board, myPosition, myPiece);
         } else if (myPiece.getPieceType() == PieceType.QUEEN) {
             validMoves = loopGetMoves(validMoves, allDirections, board, myPosition, myPiece);
         } else if (myPiece.getPieceType() == PieceType.ROOK) {
