@@ -36,10 +36,6 @@ public class ChessBoard {
     public ChessPiece getPiece(ChessPosition position) {
         return squares[position.getRow()-1][position.getColumn()-1];
     }
-    /**
-     * Sets the board to the default starting board
-     * (How the game of chess normally starts)
-     */
 
     private static final Map<Character, ChessPiece.PieceType> CHAR_TO_TYPE_MAP = Map.of(
             'p', ChessPiece.PieceType.PAWN,
@@ -48,6 +44,11 @@ public class ChessBoard {
             'q', ChessPiece.PieceType.QUEEN,
             'k', ChessPiece.PieceType.KING,
             'b', ChessPiece.PieceType.BISHOP);
+
+    /**
+     * Sets the board to the default starting board
+     * (How the game of chess normally starts)
+     */
 
     public void resetBoard() {
         this.squares = new ChessPiece[8][8];
