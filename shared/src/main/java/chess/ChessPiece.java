@@ -45,16 +45,21 @@ public class ChessPiece {
         return type;
     }
 
+    /**
+     * @return list of potential promotion moves for pawn
+     */
     public List<ChessMove> getPromotionMoves(ChessPosition position1, ChessPosition position2) {
         List<ChessMove> moves = new ArrayList<>();
         List<ChessPiece.PieceType> types = Arrays.asList(PieceType.QUEEN, PieceType.BISHOP, PieceType.KNIGHT, PieceType.ROOK);
         for (ChessPiece.PieceType type : types) {
             moves.add(new ChessMove(position1, position2, type));
         }
-        // generate moves...
         return moves;
     }
 
+    /**
+     * @return list of potential moves for a piece that can move one time per turn (king, knight)
+     */
     public List<ChessMove> getMoves(List<ChessMove> validMoves, int[][] directionsArr, ChessBoard board, ChessPosition position, ChessPiece piece) {
         for (int[] dir : directionsArr) {
             int dx = dir[0], dy = dir[1];
@@ -72,6 +77,9 @@ public class ChessPiece {
         return validMoves;
     }
 
+    /**
+     * @return list of potential moves for a pawn
+     */
     public List<ChessMove> getPawnMoves(List<ChessMove> validMoves, ChessBoard board, ChessPosition position, ChessPiece piece) {
         ChessGame.TeamColor myPieceColor = piece.getTeamColor();
         int dy = (myPieceColor == ChessGame.TeamColor.WHITE) ? 1 : -1;
@@ -120,6 +128,9 @@ public class ChessPiece {
         return validMoves;
     }
 
+    /**
+     * @return list of potential moves for a piece that can move multiple times per turn (queen, rook, bishop)
+     */
     public List<ChessMove> loopGetMoves(List<ChessMove> validMoves, int[][] directionsArr, ChessBoard board, ChessPosition position, ChessPiece piece) {
         for (int[] dir : directionsArr) {
             int dx = dir[0], dy = dir[1];
