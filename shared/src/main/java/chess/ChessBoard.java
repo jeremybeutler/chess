@@ -15,6 +15,7 @@ public class ChessBoard {
         setStartingBoard();
     }
 
+    // Copy constructor for ChessBoard, given existing board
     public ChessBoard(ChessBoard board) {
         squares = new ChessPiece[8][8];
         for (int y = 0; y < 8; y++) {
@@ -25,6 +26,7 @@ public class ChessBoard {
         }
     }
 
+    // Copy constructor for ChessBoard, given board text string
     public ChessBoard(String boardText) {
 
     }
@@ -50,10 +52,20 @@ public class ChessBoard {
         return squares[position.getRow() - 1][position.getColumn() - 1];
     }
 
+    /**
+     * Sets a board's squares to those of an existing board
+     *
+     * @param newBoard Incoming board
+     */
     public void setBoard(ChessBoard newBoard) {
         squares = newBoard.squares;
     }
 
+    /**
+     * Sets a board's squares based on a board text string
+     *
+     * @param boardText Incoming board text to parse
+     */
     public void setBoardFromText(String boardText) {
         boardText = boardText.strip().replaceAll("(?m)^\\s+", "");
         int row = 8;
@@ -107,12 +119,18 @@ public class ChessBoard {
      * Sets the board to the default starting board
      * (How the game of chess normally starts)
      */
-
     public void resetBoard() {
         this.squares = new ChessPiece[8][8];
         this.setStartingBoard();
     }
 
+    /**
+     * Gets the positions of chess pieces for a given team and type
+     *
+     * @param color Team color to search for
+     * @param pieceType Piece type to search for
+     * @return Collection of team's chess piece positions (for given type)
+     */
     public Collection<ChessPosition> getPiecePositions(ChessGame.TeamColor color, ChessPiece.PieceType pieceType) {
         Collection<ChessPosition> positions = new ArrayList<>();
         for (int y = 0; y < squares.length; y++) {
@@ -126,6 +144,12 @@ public class ChessBoard {
         return positions;
     }
 
+    /**
+     * Gets the positions of all chess pieces for a given team
+     *
+     * @param color Team color to search for
+     * @return Collection of team's chess piece positions
+     */
     public Collection<ChessPosition> getTeamPiecePositions(ChessGame.TeamColor color) {
         List<ChessPosition> positions = new ArrayList<>();
         for (int y = 0; y < squares.length; y++) {
