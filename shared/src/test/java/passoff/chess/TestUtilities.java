@@ -42,23 +42,26 @@ public class TestUtilities {
             'b', ChessPiece.PieceType.BISHOP);
 
     public static ChessBoard loadBoard(String boardText) {
-        var board = new ChessBoard();
+        var board = new ChessBoard(boardText);
         int row = 8;
         int column = 1;
         for (var c : boardText.toCharArray()) {
+            var position = new ChessPosition(row, column);
             switch (c) {
                 case '\n' -> {
                     column = 1;
                     row--;
                 }
-                case ' ' -> column++;
+                case ' ' -> {
+                    board.addPiece(position, null);
+                    column++;
+                }
                 case '|' -> {
                 }
                 default -> {
                     ChessGame.TeamColor color = Character.isLowerCase(c) ? ChessGame.TeamColor.BLACK
                             : ChessGame.TeamColor.WHITE;
                     var type = CHAR_TO_TYPE_MAP.get(Character.toLowerCase(c));
-                    var position = new ChessPosition(row, column);
                     var piece = new ChessPiece(color, type);
                     board.addPiece(position, piece);
                     column++;
