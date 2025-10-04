@@ -221,4 +221,12 @@ public class ChessPiece {
     public int hashCode() {
         return Objects.hash(pieceColor, type);
     }
+
+    @Override
+    public String toString() {
+        String firstLetterUpper = String.valueOf(type.name().charAt(0));
+        return getTeamColor() == ChessGame.TeamColor.BLACK
+                ? firstLetterUpper.toLowerCase()
+                : firstLetterUpper;
+    }
 }
