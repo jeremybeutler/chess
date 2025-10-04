@@ -78,6 +78,13 @@ public class ChessGame {
         return moves;
     }
 
+    /**
+     * Utility used to actually move chess pieces from one place to another
+     *
+     * @param chessBoard chess board to execute on
+     * @param chessPiece chess piece to move
+     * @param chessMove chess move to execute
+     */
     public void executePieceMove(ChessBoard chessBoard, ChessPiece chessPiece, ChessMove chessMove) {
         chessBoard.addPiece(chessMove.getStartPosition(),null);
         ChessPiece.PieceType promPieceType = chessMove.getPromotionPiece();
@@ -99,6 +106,13 @@ public class ChessGame {
         makeMoveBoard(move, board);
     }
 
+    /**
+     * Makes a move in a chess game on a given board
+     *
+     * @param move chess move to perform
+     * @param chessBoard specific board to perform the move on
+     * @throws InvalidMoveException if move is invalid
+     */
     public void makeMoveBoard(ChessMove move, ChessBoard chessBoard) throws InvalidMoveException {
         ChessPosition moveStartPos = move.getStartPosition();
         ChessPiece pieceAtPos = chessBoard.getPiece(moveStartPos);
@@ -125,7 +139,13 @@ public class ChessGame {
     public boolean isInCheck(TeamColor teamColor) {
         return isInCheckBoard(teamColor, board);
     }
-
+    /**
+     * Determines if the given team is in check for a given board
+     *
+     * @param teamColor which team to check for check
+     * @param chessBoard specific board to check for check on
+     * @return True if the specified team is in check
+     */
     public boolean isInCheckBoard(TeamColor teamColor, ChessBoard chessBoard) {
         Collection<ChessPosition> kings = chessBoard.getPiecePositions(teamColor, ChessPiece.PieceType.KING);
         ChessPosition kingPos = null;
@@ -208,7 +228,7 @@ public class ChessGame {
     /**
      * Sets this game's chessboard with a given board
      *
-     * @param board the new board to use
+     * @param passedBoard the new board to use
      */
     public void setBoard(ChessBoard passedBoard) {
         board = passedBoard;
